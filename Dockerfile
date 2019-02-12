@@ -7,7 +7,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q --force-yes libpcre3-de
 
 RUN mkdir /tmp/gsl
 COPY src /tmp/gsl/src
-COPY pcre /tmp/gsl/pcre
 COPY packaging/docker/run_gsl.sh /usr/local/bin/run_gsl.sh
 WORKDIR /tmp/gsl/src
 RUN make
