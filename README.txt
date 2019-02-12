@@ -1,4 +1,4 @@
-.set GIT=http://github.com/imatix/gsl
+.set GIT=http://github.com/zeromq/gsl
 
 # GSL/4.1 - a Universal Code Generator
 
@@ -24,6 +24,10 @@ GSL was actively developed by [iMatix Corporation](http://www.imatix.com) from 1
 
 The authors grant you free use of this software under the terms of the GNU General Public License version 3 or, at your choice, any later version. (GPLv3+). For details see the files `COPYING` in this directory.
 
+#### Ownership and License of generated sources
+
+The copyright of the output of GSL is by default the property of the user or whomever writes the template(s).
+
 ### Building and installing
 
 Dependencies:
@@ -32,7 +36,7 @@ Dependencies:
 
 To build from git on a UNIX-like box, and install into `/usr/local/bin`:
 
-    git clone git://github.com/imatix/gsl
+    git clone git://github.com/zeromq/gsl
     cd gsl/src
     make
     sudo make install
@@ -60,11 +64,66 @@ Cd to `src` and run:
     CCNAME=gcc47 gmake
     gmake install
 
+#### Building on Cygwin
+
+Install apt-cyg, a cygwin package manager:
+
+    lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
+    install apt-cyg /bin
+
+Install git:
+
+    apt-cyg install git
+
+Install gcc's dependencies:
+
+    apt-cyg install wget gcc-g++ make diffutils libmpfr-devel libgmp-devel libmpc-devel libpcre-devel libcrypt-devel
+
+Download, Build and Install gcc:
+
+    wget http://ftpmirror.gnu.org/gcc/gcc-4.9.2/gcc-4.9.2.tar.gz
+    tar xf gcc-4.9.2.tar.gz
+    mkdir build-gcc && cd build-gcc
+    ../gcc-4.9.2/configure --program-suffix=-4.9.2 --enable-languages=c,c++ --disable-bootstrap --disable-shared
+    make -j4
+    make install
+
+Finally build gsl:
+
+    git clone git://github.com/zeromq/gsl
+    cd gsl/src
+    make
+    make install
+
+Finally build gsl:
+
+    git clone git://github.com/zeromq/gsl
+    cd gsl/src
+    make
+    make install
+
+#### Building on MacOS 
+
+The modern way of building on MacOS is to make sure you have pcre installed and use brew.
+
+    brew install pcre
+
+And then build gsl as above:
+
+    git clone git://github.com/zeromq/gsl
+    cd gsl/src
+    make
+    sudo make install
+
 ### This Document
 
-This document was written by Pieter Hintjens in October 2010 based on two 2005 articles on 'model oriented programming', and the GSL reference manual.  This text is originally at README.txt and is built using [gitdown](http://github.com/imatix/gitdown). The text was updated by Gyepi Sam in January 2013 to port documentation from earlier versions and to include more examples.
+This document was written by Pieter Hintjens in October 2010 based on two 2005 articles on 'model oriented programming', and the GSL reference manual.  This text is originally at README.txt and is built using [gitdown](http://github.com/zeromq/gitdown). The text was updated by Gyepi Sam in January 2013 to port documentation from earlier versions and to include more examples.
 
 ## Starting with GSL
+
+GSL is an acronym for Generator Scripting Language. And that is what it does. You write scripts in gsl, feed it some data from some XML files and it generates nicely formatted text files for you. These files can be source code, a web site, a recipe book or whatever you like.
+
+Read on to get you started with code generation!
 
 [diagram]
 
@@ -1183,6 +1242,9 @@ GSL helps you make neat COBOL code by automatically filling the first six charac
 
 GSL uses as its line terminator the value of of the attribute `terminator` of the gsl scope.  The default value is "\n" but it could also be set to "\r\n", for example.
 
+    \# for Windows batch scripts
+    \.terminator="\r\n"
+
 #### Escape Symbol
 
 GSL uses the backslash "\" as its default escape symbol, mainly due to its POSIX / C roots. This can be very annoying in templates that have a lot of backslashes. You can override the escape symbol by changing the [gsl].escape attribute, or using the -escape:X command-line switch.
@@ -1268,31 +1330,31 @@ Some functions accept an optional parameter, listed as `error`. If the parameter
 
     first ()
         True if current item is first in list.
-        
+
     index (item)
         Return index in current selection.
-        
+
     item (item)
         Return item number in original list.
-        
+
     last ()
         True if current item is last in list.
-        
+
     macro (name)
         True if name is a defined macro / function.
-        
+
     name ()
         To be explained.
-        
+
     scope ()
         To be explained.
-        
+
     total ()
         To be explained.
 
     which ()
         To be explained.
-        
+
 #### conv
 
 .pull doc/modules/ggconv.txt
@@ -1902,7 +1964,7 @@ Terminates the block introduced by a `template` instruction.
 
 #### Macros and Functions
 
-Macros and functions are pieces of GSL which can be invoked with parameters. The only difference between a macro and as function is that macros are interpreted in template mode and functions in script mode.
+Macros and functions are pieces of GSL which can be invoked with parameters. The only difference between a macro and a function is that macros are interpreted in template mode and functions in script mode.
 
 Just like other data, macros and functions are attached to scopes, and can only be used within that scope.
 

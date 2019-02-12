@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE=1
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    PAR := $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    MAKEFLAGS += -j$(PAR)
+endif
+
+%:
+	dh $@ --parallel
+
+override_dh_strip:
+	dh_strip --dbg-package=generator-scripting-language-dbg

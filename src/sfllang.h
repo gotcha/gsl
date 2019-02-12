@@ -12,7 +12,7 @@
  *                                                                           *
  *  This program is free software; you can redistribute it and/or            *
  *  modify it under the terms of the GNU General Public License as           *
- *  published by the Free Software Foundation; either version 2 of           *
+ *  published by the Free Software Foundation; either version 3 of           *
  *  the License, or (at your option) any later version.                      *
  *                                                                           *
  *  This program is distributed in the hope that it will be useful,          *
@@ -22,8 +22,7 @@
  *                                                                           *
  *  You should have received a copy of the GNU General Public                *
  *  License along with this program in the file 'license.gpl'; if            *
- *  not, write to the Free Software Foundation, Inc., 59 Temple              *
- *  Place - Suite 330, Boston, MA 02111-1307, USA.                           *
+ *  not, see <http://www.gnu.org/licenses/>.                                 *
  *                                                                           *
  *  You can also license this software under iMatix's General Terms          *
  *  of Business (GTB) for commercial projects.  If you have not              *
@@ -58,9 +57,9 @@ Bool  get_accents         (void);
 char *get_units_name      (int units);
 char *get_tens_name       (int tens);
 char *get_day_name        (int day);
-char *get_day_abbrev      (int day, Bool upper);
+char *get_day_abbrev      (int day, Bool upper, char *dest);
 char *get_month_name      (int month);
-char *get_month_abbrev    (int month, Bool upper);
+char *get_month_abbrev    (int month, Bool upper, char *dest);
 char *timestamp_string    (char *buffer, const char *pattern);
 char *certify_the_number  (char *buffer, int buffer_size, long number,
                            char *language, int code_page);

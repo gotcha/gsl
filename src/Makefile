@@ -1,7 +1,8 @@
 #
 # Makefile for iMatix GSL/4.1
 #
-# Copyright (c) 1996-2010 iMatix Corporation
+# Copyright (c) 1996-2016 iMatix Corporation
+#               2016-2017 GSL Developers
 # All rights reserved.
 #
 # This file is licensed under the BSD license as follows:
@@ -38,8 +39,10 @@ INSTALL = /usr/bin/install -c
 # Installation directories, good for Debian Packaging
 DESTDIR ?= /usr/local
 prefix = ${DESTDIR}
-mandir = ${prefix}/share/man/man8
+mandir = ${prefix}/share/man/man1
 bindir = ${prefix}/bin
+
+RM ?= rm -f
 
 # Default values for object, library, and executable extensions.
 #
@@ -49,6 +52,8 @@ EXE =
 DBG =
 CC = ./c -q
 export CCLIBS = -lpcre
+
+CPPFLAGS ?= -I/usr/include/pcre
 
 # Reset the suffixes that will be considered to just our own list.
 #
@@ -61,7 +66,7 @@ export CCLIBS = -lpcre
 # with the iMatix c script without any arguments.
 #
 .c$(OBJ):
-	$(CC) $(DBG) $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(DBG) $<
 
 #
 # Default rule -- all depends on everything.
@@ -84,7 +89,7 @@ libgsl$(LIB): ggobjt$(OBJ) ggcomm$(OBJ) ggscop$(OBJ) ggcode$(OBJ) ggcodem$(OBJ) 
 	$(CC) -r libgsl$(LIB) ggobjt$(OBJ) ggcomm$(OBJ) ggscop$(OBJ) ggcode$(OBJ) ggcodem$(OBJ) ggpars$(OBJ) ggparsm$(OBJ) ggconv$(OBJ) ggdiag$(OBJ) ggenvt$(OBJ) ggfile$(OBJ) gggsl$(OBJ) ggmath$(OBJ) ggpcre$(OBJ) ggproc$(OBJ) ggscrp$(OBJ) ggsock$(OBJ) ggstrn$(OBJ) ggsymb$(OBJ) ggthrd$(OBJ) ggtime$(OBJ) ggxml$(OBJ) sflbits$(OBJ) sflcvds$(OBJ) sflcvts$(OBJ) sflfile$(OBJ) sfllbuf$(OBJ) sflnode$(OBJ) sflsock$(OBJ) sfltron$(OBJ) smtlog$(OBJ) smtmsg$(OBJ) smtsimu$(OBJ) smttst2$(OBJ) sflcomp$(OBJ) sflcvns$(OBJ) sfldate$(OBJ) sflfind$(OBJ) sfllist$(OBJ) sflprint$(OBJ) sflsort$(OBJ) sfluid$(OBJ) smtoper$(OBJ) smtslot$(OBJ) smttst3$(OBJ) sflcons$(OBJ) sflcvsb$(OBJ) sfldes$(OBJ) sflfort$(OBJ) sflmail$(OBJ) sflproc$(OBJ) sflstr$(OBJ) sflxml$(OBJ) smtpipe$(OBJ) smtsmtp$(OBJ) smtxlog$(OBJ) sflconv$(OBJ) sflcvsd$(OBJ) sfldescr$(OBJ) sflheap$(OBJ) sflmath$(OBJ) sflscrit$(OBJ) sflsymb$(OBJ) sflxmll$(OBJ) smtpop$(OBJ) smtsock$(OBJ) sflcryp$(OBJ) sflcvsn$(OBJ) sfldir$(OBJ) sflhttp$(OBJ) sflmem$(OBJ) sflsearch$(OBJ) sflsyst$(OBJ) sflxmls$(OBJ) smtrdns$(OBJ) smttime$(OBJ) sflcvbs$(OBJ) sflcvst$(OBJ) sflenv$(OBJ) sflini$(OBJ) sflmesg$(OBJ) sflsha$(OBJ) sfltok$(OBJ) smtecho$(OBJ) smtrdnsl$(OBJ) smttran$(OBJ) sflcvdp$(OBJ) sflcvtp$(OBJ) sflexdr$(OBJ) sfllang$(OBJ) sflmime$(OBJ) sflslot$(OBJ) sfltree$(OBJ) smtlib$(OBJ) smtserv$(OBJ) smttst1$(OBJ)
 gsl$(OBJ): gsl.c ggpriv.h ggcomm.h ggpars.h ggscop.h ggcode.h ggobjt.h version.h sflbits.h sfldescr.h sflfind.h sflini.h sflmem.h sflprocx.h sflstr.h sfluid.h smthead.h smtserv.h sflcomp.h sfldes.h sflfort.h sfllang.h sflmesg.h sflsearch.h sflsymb.h sflxml.h smtlib.h smtsimu.h sflcons.h sfldir.h sfl.h sfllbuf.h sflmime.h sflsha.h sflsyst.h sflxmll.h smtmem.h smtsslm.h sflconv.h sflenv.h sflhead.h sfllist.h sflnode.h sflslot.h sfltok.h sflxmls.h smtmsg.h smttime.h sflcryp.h sflexdr.h sflheap.h sflmail.h sflprint.h sflsock.h sfltree.h smt3.h smtpriv.h smtxlog.h sfldate.h sflfile.h sflhttp.h sflmath.h sflproc.h sflsort.h sfltron.h smtdefn.h smtrdnsl.h
 gsl$(EXE): gsl$(OBJ) libgsl$(LIB)
-	$(CC) $(DBG) -L gsl
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DBG) -L gsl
 ggobjt$(OBJ): ggobjt.c
 ggcomm$(OBJ): ggcomm.c
 ggscop$(OBJ): ggscop.c
@@ -183,17 +188,47 @@ smttst3$(OBJ): smttst3.c
 smtxlog$(OBJ): smtxlog.c
 
 everything: libgsl$(LIB) gsl$(EXE)
-	./gsl -v
 
 code:
-	gsl -q ggconv.gxl ggdiag.gxl ggenvt.gxl ggfile.gxl gggsl.gxl ggmath.gxl ggpcre.gxl ggproc.gxl ggscrp.gxl ggsock.gxl ggstrn.gxl ggsymb.gxl ggthrd.gxl ggtime.gxl ggxml.gxl
+	./gsl$(EXE) -q ggconv.gxl ggdiag.gxl ggenvt.gxl ggfile.gxl gggsl.gxl ggmath.gxl ggpcre.gxl ggproc.gxl ggscrp.gxl ggsock.gxl ggstrn.gxl ggsymb.gxl ggthrd.gxl ggtime.gxl ggxml.gxl
 
 headers:
 	cat gghead.h ggcomm.h ggpars.h ggparsm.h ggscrp.h ggscop.h ggobjt.h ggsymb.h gggsl.h ggcode.h ggcodem.h ggfile.h ggstrn.h ggenvt.h ggconv.h ggmath.h ggsock.h ggthrd.h ggxml.h ggtime.h ggpcre.h ggdiag.h ggproc.h > gsl.h
 
+test: everything
+	./gsl -v
+
+check: gsl$(EXE)
+	./gsl$(EXE) testall
+	./gsl$(EXE) teststr
+	if ./gsl$(EXE) testabort ; then \
+	    echo "=== The gsl abort() returned a zero exit code, this is useless, FAIL"; \
+	    false ; \
+	else \
+	    echo "=== The gsl abort() returned non-zero exit code as expected, OK"; \
+	fi
+
 install:
-	$(INSTALL) -m 755 -d $(bindir)
-	$(INSTALL) -m 755 gsl $(bindir)
+	$(INSTALL) -m 755 -d "$(bindir)"
+	$(INSTALL) -m 755 gsl "$(bindir)"
+	$(INSTALL) -m 755 -d "$(mandir)"
+	$(INSTALL) -m 644 gsl.1 "$(mandir)"
+
+uninstall:
+	$(RM) "$(bindir)/gsl"
+	$(RM) "$(mandir)/gsl.1"
+	@if test -d "$(bindir)" ; then \
+	    if test `find "$(bindir)" | wc -l` -le 1 ; then \
+	        echo "$(RM) -r $(bindir)" >&2 ; \
+	        $(RM) -r "$(bindir)" ; \
+	    else true; fi ; \
+	else true ; fi
+	@if test -d "$(mandir)" ; then \
+	    if test `find "$(mandir)" | wc -l` -le 1 ; then \
+	        echo "$(RM) -r $(mandir)" >&2 ; \
+	        $(RM) -r "$(mandir)" ; \
+	    else true; fi ; \
+	else true ; fi
 
 clean:
-	rm *.o *.a gsl
+	rm -f *.o *.a gsl

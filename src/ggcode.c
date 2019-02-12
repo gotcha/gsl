@@ -6,7 +6,7 @@
  *                                                                           *
  *  This program is free software; you can redistribute it and/or modify     *
  *  it under the terms of the GNU General Public License as published by     *
- *  the Free Software Foundation; either version 2 of the License, or (at    *
+ *  the Free Software Foundation; either version 3 of the License, or (at    *
  *  your option) any later version.                                          *
  *                                                                           *
  *  This program is distributed in the hope that it will be useful, but      *
@@ -4049,14 +4049,14 @@ op2-> value. n;                    else
 
                 case OP_OR:
                     tcb-> result_node-> value. n
-                        = (double) ((Bool) tcb-> result_node-> op1-> value. n
-                        ||          (Bool) tcb-> result_node-> op2-> value. n);
+                        = (double) (tcb-> result_node-> op1-> value. n
+                        ||          tcb-> result_node-> op2-> value. n);
                     break;
 
                 case OP_AND:
                     tcb-> result_node-> value. n
-                        = (double) ((Bool) tcb-> result_node-> op1-> value. n
-                        &&          (Bool) tcb-> result_node-> op2-> value. n);
+                        = (double) (tcb-> result_node-> op1-> value. n
+                        &&          tcb-> result_node-> op2-> value. n);
                     break;
 
                 default:
@@ -4079,7 +4079,7 @@ op2-> value. n;                    else
           {
             case OP_NOT:
                 tcb-> result_node-> value. n
-                    = (double) ! (Bool) tcb-> result_node-> op2-> value. n;
+                    = (double) ! tcb-> result_node-> op2-> value. n;
                 break;
 
             case OP_PLUS:
@@ -5390,6 +5390,9 @@ MODULE invoke_abort_handler (THREAD *thread)
     tcb = thread-> tcb;                 /*  Point to thread's context        */
     if (abort_fct)
         (abort_fct) ();                 /*  Call abort handler if defined    */
+    else
+        exit(EXIT_FAILURE);             /*  An abort is not an echo, so report
+                                         *  to caller that there is an issue */
 }
 
 

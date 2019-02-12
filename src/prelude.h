@@ -12,7 +12,7 @@
  *                                                                           *
  *  This program is free software; you can redistribute it and/or            *
  *  modify it under the terms of the GNU General Public License as           *
- *  published by the Free Software Foundation; either version 2 of           *
+ *  published by the Free Software Foundation; either version 3 of           *
  *  the License, or (at your option) any later version.                      *
  *                                                                           *
  *  This program is distributed in the hope that it will be useful,          *
@@ -22,8 +22,7 @@
  *                                                                           *
  *  You should have received a copy of the GNU General Public                *
  *  License along with this program in the file 'license.gpl'; if            *
- *  not, write to the Free Software Foundation, Inc., 59 Temple              *
- *  Place - Suite 330, Boston, MA 02111-1307, USA.                           *
+ *  not, see <http://www.gnu.org/licenses/>.                                 *
  *                                                                           *
  *  You can also license this software under iMatix's General Terms          *
  *  of Business (GTB) for commercial projects.  If you have not              *
@@ -90,7 +89,12 @@
  *  __VMS_XOPEN         Supports XOPEN functions
  */
 
-#if (defined (__64BIT__) || defined (__x86_64__))
+#if (defined (__64BIT__) || defined (__x86_64__) || defined (__AARCH64EL__) \
+    || defined (__PPC64__) || defined (__powerpc64__) || defined (__ppc64__) \
+    || defined (__s390x__) || (defined (__sparc__) && defined (__arch64__)) \
+    || defined (__ia64) || defined (__itanium__) || defined (_M_IA64) \
+    || defined (__riscv64) || (defined (__riscv_xlen) && __riscv_xlen == 64) \
+    || (defined (__mips__) && defined (_MIPSEL) && _MIPS_SIM == _ABI64))
 #    define __IS_64BIT__                /*  May have 64-bit OS/compiler      */
 #else
 #    define __IS_32BIT__                /*  Else assume 32-bit OS/compiler   */

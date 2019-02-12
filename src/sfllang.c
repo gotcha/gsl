@@ -12,7 +12,7 @@
  *                                                                           *
  *  This program is free software; you can redistribute it and/or            *
  *  modify it under the terms of the GNU General Public License as           *
- *  published by the Free Software Foundation; either version 2 of           *
+ *  published by the Free Software Foundation; either version 3 of           *
  *  the License, or (at your option) any later version.                      *
  *                                                                           *
  *  This program is distributed in the hope that it will be useful,          *
@@ -22,8 +22,7 @@
  *                                                                           *
  *  You should have received a copy of the GNU General Public                *
  *  License along with this program in the file 'license.gpl'; if            *
- *  not, write to the Free Software Foundation, Inc., 59 Temple              *
- *  Place - Suite 330, Boston, MA 02111-1307, USA.                           *
+ *  not, see <http://www.gnu.org/licenses/>.                                 *
  *                                                                           *
  *  You can also license this software under iMatix's General Terms          *
  *  of Business (GTB) for commercial projects.  If you have not              *
@@ -595,21 +594,20 @@ get_day_name (int day)
     a value from 0 (Sunday) to 6 (Saturday).  The abbreviation (3 letters)
     is converted into uppercase if the 'upper' argument is true.  Accented
     characters are formatted according to the current accents setting.
+    Caller must provide a large enough destination (4 characters including
+    NULL), the function will copy the result into it.
     ---------------------------------------------------------------------[>]-*/
 
 char *
-get_day_abbrev (int day, Bool upper)
+get_day_abbrev (int day, Bool upper, char *dest)
 {
-    char
-        abbrev [4];
-
     ASSERT (day >= 0 && day <= 6);
 
-    strncpy (abbrev, day_table [day], 3);
-    abbrev [3] = '\0';
+    strncpy (dest, day_table [day], 3);
+    dest [3] = '\0';
     if (upper)
-        strupc (abbrev);
-    return (handle_accents (abbrev));
+        strupc (dest);
+    return (handle_accents (dest));
 }
 
 
@@ -636,22 +634,21 @@ get_month_name (int month)
     be a value from 1 to 12.  The abbreviation (3 letters) is converted into
     uppercase if the 'upper' argument is true.  Accented characters are
     formatted according to the current accents setting.
+    Caller must provide a large enough destination (4 characters including
+    NULL), the function will copy the result into it.
     ---------------------------------------------------------------------[>]-*/
 
 char *
-get_month_abbrev (int month, Bool upper)
+get_month_abbrev (int month, Bool upper, char *dest)
 {
-    char
-        abbrev [4];
-
     ASSERT (month >= 1 && month <= 12);
 
-    strncpy (abbrev, month_table [month - 1], 3);
-    abbrev [3] = '\0';
+    strncpy (dest, month_table [month - 1], 3);
+    dest [3] = '\0';
     if (upper)
-        strupc (abbrev);
+        strupc (dest);
 
-    return (handle_accents (abbrev));
+    return (handle_accents (dest));
 }
 
 
@@ -815,7 +812,7 @@ timestamp_string (char *buffer, const char *pattern)
                     sprintf (dest, "%02d", month);
                 else
                 if (cursize == 3)       /*  mmm   month, 3 letters           */
-                    strcpy (dest, get_month_abbrev (month, FALSE));
+                    get_month_abbrev (month, FALSE, dest);
                 else
                 if (cursize == 4)       /*  mmmm  month, full name           */
                     strcpy (dest, get_month_name (month));
@@ -823,7 +820,7 @@ timestamp_string (char *buffer, const char *pattern)
 
             case 'M':
                 if (cursize == 3)       /*  MMM   month, 3-letters, ucase    */
-                    strcpy (dest, get_month_abbrev (month, TRUE));
+                    get_month_abbrev (month, TRUE, dest);
                 else
                 if (cursize == 4)       /*  MMMM  month, full name, ucase    */
                   {
@@ -837,7 +834,7 @@ timestamp_string (char *buffer, const char *pattern)
                     sprintf (dest, "%02d", day);
                 else
                 if (cursize == 3)       /*  ddd   day of week, Sun           */
-                    strcpy (dest, get_day_abbrev (day_of_week (date), FALSE));
+                    get_day_abbrev (day_of_week (date), FALSE, dest);
                 else
                 if (cursize == 4)       /*  dddd  day of week, Sunday        */
                     strcpy (dest, get_day_name (day_of_week (date)));
@@ -845,7 +842,7 @@ timestamp_string (char *buffer, const char *pattern)
 
             case 'D':
                 if (cursize == 3)       /*  DDD   day of week, SUN           */
-                    strcpy (dest, get_day_abbrev (day_of_week (date), TRUE));
+                    get_day_abbrev (day_of_week (date), TRUE, dest);
                 else
                 if (cursize == 4)       /*  DDDD  day of week, SUNDAY        */
                   {

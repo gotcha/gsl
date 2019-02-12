@@ -6,7 +6,7 @@
  *                                                                           *
  *  This program is free software; you can redistribute it and/or modify     *
  *  it under the terms of the GNU General Public License as published by     *
- *  the Free Software Foundation; either version 2 of the License, or (at    *
+ *  the Free Software Foundation; either version 3 of the License, or (at    *
  *  your option) any later version.                                          *
  *                                                                           *
  *  This program is distributed in the hope that it will be useful, but      *
@@ -1058,8 +1058,8 @@ strneat (char *text)
         while ((!isalpha (*c)) && (*c))
             c++;
 
-    if (! *c)
-        break;
+        if (! *c)
+            break;
 
         *c = toupper (*c);
         c++;
@@ -1212,6 +1212,8 @@ concatenate_results (RESULT_NODE *r,
     char
       **blk,
        *txt,
+       *line_end,
+       *last_line,
        *rc;
 
     if (error_text)
@@ -1343,6 +1345,26 @@ concatenate_results (RESULT_NODE *r,
       }
 
     rc [totlines * totlinelength] = 0;
+
+    /*  Trim whitespace from all lines  */
+    txt = rc;
+    while (txt)
+      {
+         line_end = strchr(txt, '\n');
+         if (!line_end)
+           break;
+         if (*(line_end - 1) == '\r')
+           line_end = line_end - 1;
+         last_line = line_end;
+         while (last_line > txt)
+           {
+             if (!isspace (*(last_line - 1)))
+                 break;
+             last_line--;
+           }
+         memmove(last_line, line_end, strlen(line_end) + 1);
+         txt = last_line + (*last_line == '\r' ? 2 : 1);
+      }
 
     /*  JS Blunder check  */
     ASSERT (runlength == totlinelength);
