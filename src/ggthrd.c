@@ -87,7 +87,7 @@ CLASS_DESCRIPTOR
 
 static GSL_FUNCTION remote_thread_functions [] =
 {
-    {"send",           0, 0, 0, (void *) &parm_list_r, 1, remote_thread_send}};
+    {"send",           0, 0, 1, (void *) &parm_list_vr, 1, remote_thread_send}};
 
 CLASS_DESCRIPTOR
     remote_thread_class = {
@@ -110,7 +110,7 @@ CLASS_DESCRIPTOR
 static GSL_FUNCTION child_thread_functions [] =
 {
     {"interrupt",      0, 0, 0, NULL,            1, child_thread_interrupt},
-    {"send",           0, 0, 0, (void *) &parm_list_r, 1, child_thread_send}};
+    {"send",           0, 0, 1, (void *) &parm_list_vr, 1, child_thread_send}};
 
 CLASS_DESCRIPTOR
     child_thread_class = {
